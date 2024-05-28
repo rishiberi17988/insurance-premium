@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kshitijberi/Documents/GitHub/insurance-premium/mlruns/0/0730b67952324a92b321053fcb6aadd2/artifacts
+end_time: 1716881471465
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 0730b67952324a92b321053fcb6aadd2
+run_name: adaptable-conch-359
+run_uuid: 0730b67952324a92b321053fcb6aadd2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1716881470024
+status: 3
+tags: []
+user_id: kshitijberi

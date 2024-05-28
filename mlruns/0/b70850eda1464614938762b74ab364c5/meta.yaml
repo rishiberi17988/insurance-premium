@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/kshitijberi/Documents/GitHub/insurance-premium/mlruns/0/b70850eda1464614938762b74ab364c5/artifacts
+end_time: 1716797956051
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b70850eda1464614938762b74ab364c5
+run_name: intelligent-wolf-736
+run_uuid: b70850eda1464614938762b74ab364c5
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1716797954630
+status: 3
+tags: []
+user_id: kshitijberi
