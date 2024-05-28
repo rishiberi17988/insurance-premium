@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . /app
 RUN apt-get update 
 RUN pip install --no-cache-dir -r requirements.txt
-CMD ["pyton3", "app.py"]
+CMD ["python3", "app.py"]
