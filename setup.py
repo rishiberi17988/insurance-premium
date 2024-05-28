@@ -16,7 +16,7 @@ def get_requirements(file_path:str)->List[str]:
 
 setup(
     name='InsurancePremiumPrediction1',
-    version='0.0.1',
+    version='0.0.1.1',
     author='kshitij beri',
     author_email='rishiberi17988@gmail.com',
     install_requires=["scikit-learn","pandas","numpy"],

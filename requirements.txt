@@ -2,6 +2,6 @@ pandas
 scikit-learn
 numpy
 seaborn
-streamlit
+flask
 
 -e .

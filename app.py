@@ -1,56 +1,36 @@
-import streamlit as st
-import pandas as pd
 from src.pipeline.prediction_pipeline import CustomData, PredictPipeline
+from flask import Flask, request, render_template, jsonify
 
-# Title of the Streamlit app
-st.title("Premium insurance")
+app = Flask(__name__)
 
-# Sidebar for user input
-st.sidebar.header("Input Parameters")
+@app.route('/')
+def home_page():
+    return render_template("index.html")
 
-def user_input_features():
-    age = st.sidebar.number_input('age', min_value=0, value=25)
-    bmi = st.sidebar.number_input('bmi', min_value=0, value=25)
-    children = st.sidebar.number_input('children', min_value=0, value=0)
-    
-    sex = st.sidebar.selectbox('sex', ('male' , 'female'))
-    smoker = st.sidebar.selectbox('Smoker', ('yes', 'no'))
-    region = st.sidebar.selectbox('region', ('southeast', 'southwest', 'northeast', 'northwest'))
+@app.route("/predict", methods=["GET", "POST"])
+def predict_datapoint():
+    if request.method == "GET":
+        return render_template("form.html")
+    else:
+        data = CustomData(
+            age=int(request.form.get('age')),
+            bmi=float(request.form.get('bmi')),
+            children=int(request.form.get('children')),
+            sex=request.form.get('sex'),
+            smoker=request.form.get('smoker'),
+            region=request.form.get('region')
+        )
+        # this is my final data
+        final_data = data.get_data_as_dataframe()
+        
+        predict_pipeline = PredictPipeline()
+        
+        pred = predict_pipeline.predict(final_data)
+        
+        result = round(pred[0], 2)
+        
+        return render_template("result.html", final_result=result)
 
-    data = {
-        'age': age,
-        'bmi': bmi,
-        'children': children,
-        'sex': sex,
-        'smoker': smoker,
-        'region': region
-    }
-    features = pd.DataFrame(data, index=[0])
-    return features
-
-# Get user input
-input_df = user_input_features()
-
-# Display input features
-st.subheader('User Input parameters')
-st.write(input_df)
-
-# Prediction
-if st.button('Predict'):
-    data = CustomData(
-        age=input_df.at[0, 'age'],
-        bmi=input_df.at[0, 'bmi'],
-        children=input_df.at[0, 'children'],
-        sex=input_df.at[0, 'sex'],
-        smoker=input_df.at[0, 'smoker'],
-        region=input_df.at[0, 'region']
-    )
-    
-    final_data = data.get_data_as_dataframe()
-    
-    predict_pipeline = PredictPipeline()
-    pred = predict_pipeline.predict(final_data)
-    result = round(pred[0], 2)
-    
-    st.subheader('Prediction')
-    st.write(f'The predicted expense is ${result}')
+# Execution begins
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=80)
