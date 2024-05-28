@@ -1,0 +1,51 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - insurancepremiumprediction
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: https://insurancepremium.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_d65cbb1eb67c4c55b5633d6cc887dc06 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_5e20a7eca77c4047b03d0e0cbec750fa }}
+
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: insurancepremium.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_d65cbb1eb67c4c55b5633d6cc887dc06 }}/flaskapp:${{ github.sha }}
+        file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'insurancepremiumprediction'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_c1bee9ffaf4d4a18869a367679688de0 }}
+        images: 'insurancepremium.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_d65cbb1eb67c4c55b5633d6cc887dc06 }}/flaskapp:${{ github.sha }}'
